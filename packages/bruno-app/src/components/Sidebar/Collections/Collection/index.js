@@ -141,9 +141,9 @@ const Collection = ({ collection, searchText }) => {
 
     ensureCollectionIsMounted();
 
+    dispatch(toggleCollection(collection.uid));
+    // Set default jsSandboxMode to 'safe' if not present and save to disk (only if was collapsed and is now opening)
     if (collection.collapsed) {
-      dispatch(toggleCollection(collection.uid));
-      // Set default jsSandboxMode to 'safe' if not present and save to disk
       if (!collection.securityConfig?.jsSandboxMode) {
         dispatch(saveCollectionSecurityConfig(collection.uid, {
           jsSandboxMode: 'safe'

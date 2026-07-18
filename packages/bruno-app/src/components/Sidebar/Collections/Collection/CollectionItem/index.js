@@ -305,14 +305,12 @@ const CollectionItem = ({ item, collectionUid, collectionPathname, searchText })
           pathname: item.pathname
         })
       );
-      if (item.collapsed) {
-        dispatch(
-          toggleCollectionItem({
-            itemUid: item.uid,
-            collectionUid: collectionUid
-          })
-        );
-      }
+      dispatch(
+        toggleCollectionItem({
+          itemUid: item.uid,
+          collectionUid: collectionUid
+        })
+      );
     }
   };
 

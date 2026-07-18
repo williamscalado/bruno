@@ -5,7 +5,8 @@ const Wrapper = styled.div`
   display: flex;
   align-self: stretch;
   align-items: center;
-  min-width: 34px;
+  min-width: 42px;
+  width: 42px;
   flex-shrink: 0;
 
   span {

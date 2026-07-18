@@ -17,6 +17,12 @@ const Wrapper = styled.div`
     overflow-y: auto;
     overflow-x: hidden;
 
+    & > div {
+      margin-bottom: 6px;
+    }
+    & > div:last-child {
+      margin-bottom: 0px;
+    }
   }
 `;
 

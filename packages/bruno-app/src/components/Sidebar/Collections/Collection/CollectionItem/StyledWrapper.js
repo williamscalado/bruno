@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   position: relative;
+  margin-bottom: 2px;
   .menu-icon {
     color: ${(props) => props.theme.sidebar.dropdownIcon.color};
     visibility: hidden;
