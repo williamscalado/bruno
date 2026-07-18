@@ -211,6 +211,26 @@ const Wrapper = styled.div`
       opacity: 0.5;
     }
   }
+
+  .env-search-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .env-search-input {
+    width: 100%;
+    padding: 0.25rem 0.5rem;
+    font-size: ${(props) => props.theme.font.size.xs};
+    border: 1px solid ${(props) => props.theme.dropdown.separator || 'rgba(0,0,0,0.1)'};
+    background-color: transparent;
+    color: ${(props) => props.theme.text};
+    border-radius: 0.25rem;
+    outline: none;
+
+    &:focus {
+      border-color: ${(props) => props.theme.colors?.text?.yellow || '#d2a13f'};
+    }
+  }
 `;
 
 export default Wrapper;

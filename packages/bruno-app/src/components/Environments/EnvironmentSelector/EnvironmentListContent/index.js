@@ -5,6 +5,7 @@ import ColorBadge from 'components/ColorBadge';
 
 const EnvironmentListContent = ({
   environments,
+  hasAnyEnvironments,
   activeEnvironmentUid,
   description,
   onEnvironmentSelect,
@@ -14,7 +15,7 @@ const EnvironmentListContent = ({
 }) => {
   return (
     <div>
-      {environments && environments.length > 0 ? (
+      {hasAnyEnvironments ? (
         <>
           <div className="environment-list">
             <div
@@ -24,32 +25,38 @@ const EnvironmentListContent = ({
               <span className="w-2 shrink-0" />
               <span>No Environment</span>
             </div>
-            <ToolHint
-              tooltipId="environment-name-tooltip"
-              place="right"
-              positionStrategy="fixed"
-              tooltipStyle={{
-                maxWidth: '200px',
-                wordWrap: 'break-word'
-              }}
-              delayShow={1000}
-            >
-              <div>
-                {environments.map((env) => (
-                  <div
-                    key={env.uid}
-                    className={`dropdown-item ${env.uid === activeEnvironmentUid ? 'dropdown-item-active' : ''}`}
-                    onClick={() => onEnvironmentSelect(env)}
-                    data-tooltip-id="environment-name-tooltip"
-                    data-tooltip-content={env.name}
-                    data-tooltip-hidden={env.name?.length < 90}
-                  >
-                    <ColorBadge color={env.color} size={8} />
-                    <span className="max-w-100% truncate no-wrap">{env.name}</span>
-                  </div>
-                ))}
+            {environments && environments.length > 0 ? (
+              <ToolHint
+                tooltipId="environment-name-tooltip"
+                place="right"
+                positionStrategy="fixed"
+                tooltipStyle={{
+                  maxWidth: '200px',
+                  wordWrap: 'break-word'
+                }}
+                delayShow={1000}
+              >
+                <div>
+                  {environments.map((env) => (
+                    <div
+                      key={env.uid}
+                      className={`dropdown-item ${env.uid === activeEnvironmentUid ? 'dropdown-item-active' : ''}`}
+                      onClick={() => onEnvironmentSelect(env)}
+                      data-tooltip-id="environment-name-tooltip"
+                      data-tooltip-content={env.name}
+                      data-tooltip-hidden={env.name?.length < 90}
+                    >
+                      <ColorBadge color={env.color} size={8} />
+                      <span className="max-w-100% truncate no-wrap">{env.name}</span>
+                    </div>
+                  ))}
+                </div>
+              </ToolHint>
+            ) : (
+              <div className="px-3 py-2 text-xs text-muted italic">
+                No matching environments found
               </div>
-            </ToolHint>
+            )}
             <div className="dropdown-item configure-button">
               <button onClick={onSettingsClick} id="configure-env" data-testid="configure-env">
                 <IconSettings size={16} strokeWidth={1.5} />

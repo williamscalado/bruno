@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useRef, forwardRef } from 'react';
+import React, { useMemo, useState, useRef, forwardRef, useEffect } from 'react';
 import find from 'lodash/find';
 import Dropdown from 'components/Dropdown';
 import { IconWorld, IconDatabase, IconCaretDown } from '@tabler/icons';
@@ -177,7 +177,10 @@ const DropdownTrigger = forwardRef(({ collectionEnv, globalEnv }, ref) => {
 const EnvironmentSelector = ({ collection }) => {
   const dispatch = useDispatch();
   const dropdownTippyRef = useRef();
+  const searchInputRef = useRef(null);
   const [activeTab, setActiveTab] = useState('collection');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
   const [showCreateGlobalModal, setShowCreateGlobalModal] = useState(false);
   const [showImportGlobalModal, setShowImportGlobalModal] = useState(false);
   const [showCreateCollectionModal, setShowCreateCollectionModal] = useState(false);
@@ -200,9 +203,24 @@ const EnvironmentSelector = ({ collection }) => {
     [environments, globalEnvironments]
   );
 
+  const filteredEnvironments = useMemo(() => {
+    const list = activeTab === 'collection' ? environments : globalEnvironments;
+    if (!searchTerm) return list;
+    return list.filter((env) => env.name?.toLowerCase().includes(searchTerm.toLowerCase()));
+  }, [activeTab, environments, globalEnvironments, searchTerm]);
+
   const description = EMPTY_STATE_DESCRIPTIONS[activeTab];
 
   const hideDropdown = () => dropdownTippyRef.current?.hide();
+
+  useEffect(() => {
+    if (isOpen && searchInputRef.current) {
+      const timer = setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
   const handleEnvironmentSelect = (environment) => {
     const action
@@ -260,11 +278,21 @@ const EnvironmentSelector = ({ collection }) => {
     );
   };
 
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    setSearchTerm('');
+  };
+
   return (
     <StyledWrapper width={dropdownWidth}>
       <div className="environment-selector flex align-center cursor-pointer">
         <Dropdown
           onCreate={(ref) => (dropdownTippyRef.current = ref)}
+          onShow={() => setIsOpen(true)}
+          onHide={() => {
+            setIsOpen(false);
+            setSearchTerm('');
+          }}
           icon={<DropdownTrigger collectionEnv={activeCollectionEnvironment} globalEnv={activeGlobalEnvironment} />}
           placement="bottom-end"
         >
@@ -276,7 +304,7 @@ const EnvironmentSelector = ({ collection }) => {
                 className={`tab-button whitespace-nowrap pb-[0.375rem] border-b-[0.125rem] bg-transparent flex align-center cursor-pointer transition-all duration-200 mr-[1.25rem] ${
                   activeTab === tab.id ? 'active' : 'inactive'
                 }`}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => handleTabChange(tab.id)}
                 data-testid={`env-tab-${tab.id}`}
               >
                 <span className="tab-content-wrapper">
@@ -287,10 +315,25 @@ const EnvironmentSelector = ({ collection }) => {
             ))}
           </div>
 
+          {/* Search Input */}
+          {(activeTab === 'collection' ? environments : globalEnvironments)?.length > 0 && (
+            <div className="px-3 pb-2 env-search-container">
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search environments..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="env-search-input"
+              />
+            </div>
+          )}
+
           {/* Tab Content */}
           <div className="tab-content">
             <EnvironmentListContent
-              environments={activeTab === 'collection' ? environments : globalEnvironments}
+              environments={filteredEnvironments}
+              hasAnyEnvironments={(activeTab === 'collection' ? environments : globalEnvironments)?.length > 0}
               activeEnvironmentUid={activeTab === 'collection' ? activeEnvironmentUid : activeGlobalEnvironmentUid}
               description={description}
               onEnvironmentSelect={handleEnvironmentSelect}

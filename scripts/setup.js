@@ -79,16 +79,16 @@ function forceInstallPlatformDeps() {
 async function setup() {
   try {
     // Clean up node_modules (if exists)
-    console.log(`\n${icons.clean} Cleaning up node_modules directories...`);
-    const nodeModulesPaths = glob('.', 'node_modules');
-    for (const dir of nodeModulesPaths) {
-      console.log(`${icons.delete} Removing ${dir}`);
-      fs.rmSync(dir, { recursive: true, force: true });
-    }
+    // console.log(`\n${icons.clean} Cleaning up node_modules directories...`);
+    // const nodeModulesPaths = glob('.', 'node_modules');
+    // for (const dir of nodeModulesPaths) {
+    //   console.log(`${icons.delete} Removing ${dir}`);
+    //   fs.rmSync(dir, { recursive: true, force: true });
+    // }
 
     // Install dependencies
-    execCommand('npm i --legacy-peer-deps', 'Installing dependencies');
-    forceInstallPlatformDeps();
+    // execCommand('npm i --legacy-peer-deps', 'Installing dependencies');
+    // forceInstallPlatformDeps();
 
     // Build packages
     execCommand('npm run build:graphql-docs', 'Building graphql-docs');
