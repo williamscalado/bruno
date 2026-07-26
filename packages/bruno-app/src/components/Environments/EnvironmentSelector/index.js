@@ -288,7 +288,16 @@ const EnvironmentSelector = ({ collection }) => {
       <div className="environment-selector flex align-center cursor-pointer">
         <Dropdown
           onCreate={(ref) => (dropdownTippyRef.current = ref)}
-          onShow={() => setIsOpen(true)}
+          onShow={() => {
+            setIsOpen(true);
+            const hasCollectionEnvs = (environments || []).length > 0;
+            const hasGlobalEnvs = (globalEnvironments || []).length > 0;
+            if (!hasCollectionEnvs && hasGlobalEnvs) {
+              setActiveTab('global');
+            } else {
+              setActiveTab('collection');
+            }
+          }}
           onHide={() => {
             setIsOpen(false);
             setSearchTerm('');
